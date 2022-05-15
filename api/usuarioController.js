@@ -1,4 +1,3 @@
-
 import * as argon2 from "argon2";
 import * as crypto from "crypto";
 
@@ -12,11 +11,19 @@ export default function usuarioController(app, prisma) {
 
   // verifica se o usuário existe
   app.post('/usuario/isValido', async (req, res) => {
-    const {email, senha } = req.body
+    const {email, senha} = req.body
     const usuario = await prisma.usuario.findFirst({
-      where: { email: email }
+      where: {email: email}
     })
-    res.json({valido: await verifyPasswordWithHash(senha, usuario ? usuario.senha : null)})
+
+    const isValido = await verifyPasswordWithHash(senha, usuario ? usuario.senha : null)
+
+    res.json(
+      {
+        valido: isValido,
+        token: isValido ? usuario.senha : null,
+        admin: isValido ? usuario.isAdmin : false
+      })
   })
 
   // salva usuário

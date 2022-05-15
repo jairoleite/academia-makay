@@ -1,7 +1,6 @@
-export default function ({ store, redirect, route }) {
-  // If the user is not authenticated
-  if (!store.state.auth) {
-    const path = encodeURIComponent(route.path);
-    return redirect(`/login?r=${path}`);
+export default function ({ store, redirect }) {
+  // If the user is authenticated redirect to home page
+  if (store.state.auth) {
+    return redirect('/')
   }
 }
